@@ -17,15 +17,8 @@ struct TheSheet: View {
         NavigationView {
             ZStack {
                 if let dateSelected,
-                   let found = allData.calendarData.first(where: { oneData in
-                       if let lhsDate = oneData.dateStuff.date,
-                          let rhsDate = dateSelected.date,
-                          Calendar.current.startOfDay(for: lhsDate) == Calendar.current.startOfDay(for: rhsDate) {
-                           return true
-                       } else {
-                           return false
-                       }
-                   }) {
+                   let foundIndex = findTheIndex(dateSelected: dateSelected) {
+                    let found = allData.calendarData[foundIndex]
                     VStack {
                         Text("\(found.emoji)")
                             .font(.system(size: 100))
@@ -55,16 +48,7 @@ struct TheSheet: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
                         Button {
-                            if let dateSelected,
-                               let foundIndex = allData.calendarData.firstIndex(where: { oneData in
-                                   if let lhsDate = oneData.dateStuff.date,
-                                      let rhsDate = dateSelected.date,
-                                      Calendar.current.startOfDay(for: lhsDate) == Calendar.current.startOfDay(for: rhsDate) {
-                                       return true
-                                   } else {
-                                       return false
-                                   }
-                               }) {
+                            if let foundIndex = findTheIndex(dateSelected: dateSelected) {
                                 print("changing it")
                                 let newEmojiChoices = ["🥵", "😎", "🤣", "🥶"]
                                 let oldEmoji = allData.calendarData[foundIndex].emoji
@@ -88,16 +72,7 @@ struct TheSheet: View {
                         Button {
                             print("push delete")
                             
-                            if let dateSelected,
-                               let foundIndex = allData.calendarData.firstIndex(where: { oneData in
-                                   if let lhsDate = oneData.dateStuff.date,
-                                      let rhsDate = dateSelected.date,
-                                      Calendar.current.startOfDay(for: lhsDate) == Calendar.current.startOfDay(for: rhsDate) {
-                                       return true
-                                   } else {
-                                       return false
-                                   }
-                               }) {
+                            if let foundIndex = findTheIndex(dateSelected: dateSelected) {
                                 print("deleting it")
                                 
                                 // In addition to removing the element we also set it on the model so we can update the UI in the coordinator
@@ -113,6 +88,25 @@ struct TheSheet: View {
                 }
             }
         }
+    }
+    
+    func findTheIndex(dateSelected : DateComponents?) -> Int? {
+        var returnVal : Int? = nil
+        
+        if let dateSelected,
+           let foundIndex = allData.calendarData.firstIndex(where: { oneData in
+               if let lhsDate = oneData.dateStuff.date,
+                  let rhsDate = dateSelected.date,
+                  Calendar.current.startOfDay(for: lhsDate) == Calendar.current.startOfDay(for: rhsDate) {
+                   return true
+               } else {
+                   return false
+               }
+           }) {
+            returnVal = foundIndex
+        }
+        
+        return returnVal
     }
 }
 
