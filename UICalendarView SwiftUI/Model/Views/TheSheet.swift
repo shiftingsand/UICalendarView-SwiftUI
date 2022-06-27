@@ -49,7 +49,7 @@ struct TheSheet: View {
                     } label: {
                         Label("Cancel", systemImage: "xmark.circle")
                     }
-
+                    
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -84,36 +84,35 @@ struct TheSheet: View {
                         } label: {
                             Label("Change", systemImage: "pencil")
                         }
-
-                    Button {
-                        print("push delete")
                         
-                        if let dateSelected,
-                           let foundIndex = allData.calendarData.firstIndex(where: { oneData in
-                               if let lhsDate = oneData.dateStuff.date,
-                                  let rhsDate = dateSelected.date,
-                                  Calendar.current.startOfDay(for: lhsDate) == Calendar.current.startOfDay(for: rhsDate) {
-                                   return true
-                               } else {
-                                   return false
-                               }
-                           }) {
-                            print("deleting it")
+                        Button {
+                            print("push delete")
                             
-                            // In addition to removing the element we also set it on the model so we can update the UI in the coordinator
-                            allData.changedData = allData.calendarData.remove(at: foundIndex)
-                            dismiss()
+                            if let dateSelected,
+                               let foundIndex = allData.calendarData.firstIndex(where: { oneData in
+                                   if let lhsDate = oneData.dateStuff.date,
+                                      let rhsDate = dateSelected.date,
+                                      Calendar.current.startOfDay(for: lhsDate) == Calendar.current.startOfDay(for: rhsDate) {
+                                       return true
+                                   } else {
+                                       return false
+                                   }
+                               }) {
+                                print("deleting it")
+                                
+                                // In addition to removing the element we also set it on the model so we can update the UI in the coordinator
+                                allData.changedData = allData.calendarData.remove(at: foundIndex)
+                                dismiss()
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
                     } label: {
                         Text("Menu")
                     }
                 }
             }
         }
-        
     }
 }
 
